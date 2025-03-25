@@ -6,10 +6,13 @@ import requests
 from logging.handlers import RotatingFileHandler
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
+from dotenv import load_dotenv
+
+load_dotenv()  
 
 
 
-# Initialize Flask App
+
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'localhost:5000'  # Set Flask server name
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
@@ -120,4 +123,5 @@ def add_lead():
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    port = int(os.environ.get('PORT', 5000))  
+    app.run(host='0.0.0.0', port=port)
