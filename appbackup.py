@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify
 import re
 import logging
 import os
@@ -6,12 +6,11 @@ import requests
 from logging.handlers import RotatingFileHandler
 from flask_cors import CORS
 from werkzeug.middleware.proxy_fix import ProxyFix
+from dotenv import load_dotenv
 
+load_dotenv()
 
-
-# Initialize Flask App
 app = Flask(__name__)
-app.config['SERVER_NAME'] = 'localhost:5000'  # Set Flask server name
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_port=1)
 
 # Configure CORS
@@ -118,6 +117,3 @@ def add_lead():
     except Exception as e:
         app.logger.exception("Unexpected error in add_lead endpoint")
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=False)
